@@ -5,5 +5,6 @@ export default defineConfig({
     format: ['cjs', 'esm'],
     dts: true,
     clean: true,
-    external: ['react', 'react-dom', '@chakra-ui/react', 'virtual:pwa-register/react'],
+    external: ['react', 'react-dom', '@chakra-ui/react', /^virtual:/],
+    noExternal: [],
 })
