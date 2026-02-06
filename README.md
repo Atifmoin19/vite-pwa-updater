@@ -17,13 +17,41 @@ yarn add react-pwa-updater
 
 ## Prerequisites
 
-This library works with `vite-plugin-pwa`. Ensure you have it configured in your `vite.config.ts` with `injectManifest` or `generateSW` strategy (injectManifest recommended for control).
+This library is **build-tool agnostic**. It uses native Service Worker APIs at runtime, meaning it will build successfully in any project (Vite, Webpack, etc.).
+
+For the actual PWA functionality (generating the service worker), we recommend using **`vite-plugin-pwa`** if you are using Vite.
+
+### 1. Install
+
+```bash
+npm install vite-pwa-updater
+```
+
+### 2. Configure (Optional but Recommended for Vite)
+
+If using `vite-plugin-pwa`, ensure `registerType` is set to `'prompt'`:
+
+```typescript
+// vite.config.ts
+import { VitePWA } from "vite-plugin-pwa";
+
+export default defineConfig({
+  plugins: [
+    VitePWA({
+      registerType: "prompt", // Required for manual update control
+      // ... your other PWA settings
+    }),
+  ],
+});
+```
+
+> **Note**: The `registerType: 'prompt'` is required for the update banner to work properly.
 
 ## Usage
 
 ### 1. Minimal Setup (Recommended)
 
-Just import `usePwaUpdate` and `UpdateBanner` in your root `App.tsx` (or inside your Router provider).
+Just import `usePwaUpdate` and `UpdateBanner` in your root `App.tsx`.
 
 ```tsx
 import { usePwaUpdate, UpdateBanner } from "react-pwa-updater";
