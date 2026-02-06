@@ -1,4 +1,4 @@
-# react-pwa-updater 🚀
+# vite-pwa-updater 🚀
 
 A plug-and-play React library for handling PWA updates with a beautiful, non-blocking UI. It works seamlessly with `vite-plugin-pwa` to provide:
 
@@ -9,23 +9,18 @@ A plug-and-play React library for handling PWA updates with a beautiful, non-blo
 
 ## Installation
 
+You need to install both the updater library and the PWA plugin to generate the Service Worker:
+
 ```bash
-npm install react-pwa-updater
-# or
-yarn add react-pwa-updater
+npm install vite-pwa-updater
+npm install -D vite-plugin-pwa
 ```
 
 ## Prerequisites
 
-This library is **build-tool agnostic**. It uses native Service Worker APIs at runtime, meaning it will build successfully in any project (Vite, Webpack, etc.).
+This library is **build-tool agnostic** for its UI and logic, but it requires a **Service Worker** to communicate with.
 
-For the actual PWA functionality (generating the service worker), we recommend using **`vite-plugin-pwa`** if you are using Vite.
-
-### 1. Install
-
-```bash
-npm install vite-pwa-updater
-```
+If you are using **Vite**, the recommended way to generate the service worker is via `vite-plugin-pwa`.
 
 ### 2. Configure (Optional but Recommended for Vite)
 
@@ -33,13 +28,30 @@ If using `vite-plugin-pwa`, ensure `registerType` is set to `'prompt'`:
 
 ```typescript
 // vite.config.ts
+import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   plugins: [
     VitePWA({
-      registerType: "prompt", // Required for manual update control
-      // ... your other PWA settings
+      registerType: "prompt",
+      injectRegister: "auto",
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff,woff2}"],
+        cleanupOutdatedCaches: true,
+      },
+      manifest: {
+        name: "My Awesome App",
+        short_name: "App",
+        theme_color: "#ffffff",
+        icons: [
+          {
+            src: "/favicon.ico",
+            sizes: "64x64 32x32 24x24 16x16",
+            type: "image/x-icon",
+          },
+        ],
+      },
     }),
   ],
 });
@@ -53,12 +65,16 @@ export default defineConfig({
 
 Just import `usePwaUpdate` and `UpdateBanner` in your root `App.tsx`.
 
-```tsx
-import { usePwaUpdate, UpdateBanner } from "react-pwa-updater";
-import { useLocation } from "react-router-dom"; // Optional, for route-based checks
+````tsx
+> [!IMPORTANT]
+> **Placement Matters**: Call the hook inside a component that is a child of your `<Router>` (like `BrowserRouter`). This ensures `useLocation()` works correctly.
 
-function App() {
-  // 1. Initialize the updater
+```tsx
+import { usePwaUpdate, UpdateBanner } from "vite-pwa-updater";
+import { useLocation } from "react-router-dom";
+
+function MainApp() {
+  // 1. Initialize the updater (inside Router context)
   const { needRefresh, updateServiceWorker } = usePwaUpdate({
     intervalMS: 5 * 60 * 1000, // Check every 5 minutes
     trigger: useLocation(), // Optional: Check on every route change
@@ -79,7 +95,7 @@ function App() {
     </>
   );
 }
-```
+````
 
 ### 2. Custom UI (Advanced)
 

@@ -26,12 +26,12 @@ export const UpdateBanner: React.FC<UpdateBannerProps> = ({
       bottom="0"
       left="0"
       right="0"
-      bg={{ base: "white", _dark: "gray.800" }}
-      p={4}
-      boxShadow="0 -2px 10px rgba(0, 0, 0, 0.1)"
+      bg={{ base: "white", _dark: "gray.900" }}
+      p={{ base: 4, md: 5 }}
+      boxShadow="0 -10px 30px rgba(0, 0, 0, 0.15)"
       zIndex={9999}
       borderTop="1px solid"
-      borderColor={{ base: "gray.200", _dark: "gray.700" }}
+      borderColor={{ base: "gray.100", _dark: "gray.800" }}
     >
       <Flex
         maxWidth="1200px"
@@ -41,14 +41,39 @@ export const UpdateBanner: React.FC<UpdateBannerProps> = ({
         direction={{ base: "column", md: "row" }}
         gap={4}
       >
-        <Text color={{ base: "gray.800", _dark: "white" }} fontWeight="medium">
-          {text}
-        </Text>
-        <Flex gap={3}>
-          <Button size="sm" variant="ghost" onClick={onCancel}>
+        <Flex alignItems="center" gap={3}>
+          <Text fontSize="xl">🚀</Text>
+          <Text
+            color={{ base: "gray.700", _dark: "gray.100" }}
+            fontWeight="semibold"
+            fontSize={{ base: "sm", md: "md" }}
+          >
+            {text}
+          </Text>
+        </Flex>
+        <Flex
+          gap={3}
+          width={{ base: "full", md: "auto" }}
+          justifyContent="flex-end"
+        >
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={onCancel}
+            _hover={{ bg: "gray.100", _dark: { bg: "whiteAlpha.100" } }}
+          >
             {cancelText}
           </Button>
-          <Button size="sm" colorScheme="blue" onClick={onConfirm}>
+          <Button
+            size="sm"
+            colorScheme="blue"
+            onClick={onConfirm}
+            px={6}
+            fontWeight="bold"
+            boxShadow="sm"
+            _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
+            transition="all 0.2s"
+          >
             {confirmText}
           </Button>
         </Flex>
