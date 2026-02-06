@@ -1,0 +1,40 @@
+{
+  "name": "vite-pwa-updater",
+  "version": "1.0.0",
+  "description": "A ready-to-use PWA update notification component and hook for React apps using Vite.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=16",
+    "react-dom": ">=16",
+    "@chakra-ui/react": ">=2",
+    "@emotion/react": ">=11",
+    "@emotion/styled": ">=11",
+    "framer-motion": ">=6",
+    "vite-plugin-pwa": ">=0.14"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0"
+  },
+  "keywords": [
+    "react",
+    "pwa",
+    "service-worker",
+    "update",
+    "vite"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Atifmoin19/vite-pwa-updater.git"
+  }
+}
