@@ -1,6 +1,6 @@
 {
   "name": "vite-pwa-updater",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A ready-to-use PWA update notification component and hook for React apps using Vite.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

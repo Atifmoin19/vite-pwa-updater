@@ -4,12 +4,16 @@ export interface UsePwaUpdateOptions {
     intervalMS?: number; // Check interval in ms, default 5 mins
     trigger?: any; // Dependency to trigger check (e.g., location path)
     enabled?: boolean;
+    swUrl?: string; // URL to the service worker file, default '/sw.js'
+    registrationOptions?: RegistrationOptions;
 }
 
 export function usePwaUpdate({
     intervalMS = 5 * 60 * 1000,
     trigger,
     enabled = true,
+    swUrl = '/sw.js',
+    registrationOptions,
 }: UsePwaUpdateOptions = {}) {
     const [needRefresh, setNeedRefresh] = useState(false);
     const registrationRef = useRef<ServiceWorkerRegistration | null>(null);
@@ -21,20 +25,23 @@ export function usePwaUpdate({
 
         const registerSW = async () => {
             try {
-                const registration = await navigator.serviceWorker.getRegistration();
+                // 1. Try to register or get existing registration
+                let registration = await navigator.serviceWorker.register(swUrl, registrationOptions);
+
                 if (registration) {
                     registrationRef.current = registration;
 
-                    // 1. Initial check for waiting worker
+                    // 2. Initial check for waiting worker (case where update already found)
                     if (registration.waiting) {
                         setNeedRefresh(true);
                     }
 
-                    // 2. Listen for new updates found
+                    // 3. Listen for new updates found
                     registration.addEventListener('updatefound', () => {
                         const newWorker = registration.installing;
                         if (newWorker) {
                             newWorker.addEventListener('statechange', () => {
+                                // Notify when the new worker has reached the 'installed' (waiting) state
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     setNeedRefresh(true);
                                 }
@@ -43,13 +50,13 @@ export function usePwaUpdate({
                     });
                 }
             } catch (err) {
-                console.error("SW registration fetch error", err);
+                console.error("SW registration error", err);
             }
         };
 
         registerSW();
 
-        // 3. Listen for controller change (reload after skipping waiting)
+        // 4. Listen for controller change (reload after skipping waiting)
         const handleControllerChange = () => {
             window.location.reload();
         };
@@ -58,7 +65,8 @@ export function usePwaUpdate({
         return () => {
             navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
         };
-    }, [enabled]);
+    }, [enabled, swUrl, registrationOptions]);
+
 
     const updateServiceWorker = (reload: boolean = true) => {
         if (registrationRef.current?.waiting) {
