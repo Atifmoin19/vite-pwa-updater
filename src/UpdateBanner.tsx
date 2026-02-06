@@ -26,13 +26,17 @@ export const UpdateBanner: React.FC<UpdateBannerProps> = ({
       bottom="0"
       left="0"
       right="0"
-      backgroundColor={{ base: "#FFFFFF", _dark: "#1A202C" }}
-      opacity="1"
+      bg="white"
+      _dark={{
+        bg: "#1A202C",
+        borderColor: "#2D3748",
+        boxShadow: "0 -10px 40px rgba(0, 0, 0, 0.4)",
+      }}
       p={{ base: 4, md: 5 }}
-      boxShadow="0 -10px 40px rgba(0, 0, 0, 0.2)"
+      boxShadow="0 -10px 40px rgba(0, 0, 0, 0.15)"
       zIndex={10000}
       borderTop="1px solid"
-      borderColor={{ base: "#EDF2F7", _dark: "#2D3748" }}
+      borderColor="#EDF2F7"
     >
       <Flex
         maxWidth="1200px"
